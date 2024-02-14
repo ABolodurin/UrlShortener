@@ -1,0 +1,23 @@
+services:
+  db:
+    ports:
+      - 5431:5432
+    container_name: url_shortener_db_con
+    image: postgres:alpine
+    environment:
+      - POSTGRES_DB=url_shortener
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+    restart: always
+  app:
+    build: .
+    container_name: url_shortener_app_con
+    ports:
+      - 8080:8080
+    environment:
+      - spring.datasource.url=jdbc:postgresql://db:5432/url_shortener
+      - spring.datasource.username=postgres
+      - spring.datasource.password=postgres
+    depends_on:
+      - db
+    restart: always
